@@ -1,0 +1,106 @@
+Project structure:
+
+online-shopping/
+├── pom.xml
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/example/shop/
+│   │   │       └── ProductServlet.java
+│   │   ├── resources/
+│   │   └── webapp/
+│   │       ├── index.jsp
+│   │       ├── products.jsp
+│   │       └── WEB-INF/
+│   │           └── web.xml
+
+---
+
+pom.xml
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>online-shopping</artifactId>
+  <version>1.0</version>
+  <packaging>war</packaging>
+
+  <name>Online Shopping Web App</name>
+
+  <build>
+    <finalName>online-shopping</finalName>
+  </build>
+</project>
+
+---
+
+ProductServlet.java
+
+package com.example.shop;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+public class ProductServlet extends HttpServlet {
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    String[] products = { "Laptop", "Phone", "Tablet" };
+    request.setAttribute("products", products);
+    RequestDispatcher dispatcher = request.getRequestDispatcher("products.jsp");
+    dispatcher.forward(request, response);
+  }
+}
+
+---
+
+web.xml
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         version="3.0">
+
+  <servlet>
+    <servlet-name>ProductServlet</servlet-name>
+    <servlet-class>com.example.shop.ProductServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ProductServlet</servlet-name>
+    <url-pattern>/products</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+---
+
+index.jsp
+
+<html>
+  <body>
+    <h1>Welcome to Our Online Store</h1>
+    <a href="products">View Products</a>
+  </body>
+</html>
+
+---
+
+products.jsp
+
+<%@ page import="java.util.*" %>
+<html>
+  <body>
+    <h2>Available Products</h2>
+    <ul>
+      <%
+        String[] products = (String[]) request.getAttribute("products");
+        for (String product : products) {
+      %>
+        <li><%= product %></li>
+      <% } %>
+    </ul>
+  </body>
+</html>
